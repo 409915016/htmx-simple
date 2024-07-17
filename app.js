@@ -1,6 +1,14 @@
 import express from "express"
 import createHomePageTemplate from "./views/index.js"
 import createListTemplate from "./views/list.js"
+import createBookTemplate from "./views/book.js"
+import BOOKS_DATA from "./data/data.js"
+
+const getRandomInt = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // create app
 const app = express()
@@ -17,6 +25,21 @@ app.get('/', (req, res) => {
 app.get('/books', (req, res) => {
     res.send(createListTemplate())
 })
+
+app.post('/books', (req, res) =>{
+    const {title, author} = req.body
+    const id = getRandomInt(1, 99999).toString()
+
+    BOOKS_DATA.push({id, title, author})
+    res.redirect('/books/' + id)
+})
+
+app.get('/books/:id', (req, res) => {
+    const {id} = req.params
+    const book = BOOKS_DATA.find((i) => i.id === id)
+    res.send(createBookTemplate(book))
+})
+
 // listen to port
 app.listen(3000, ()=>{
     console.log('App listening on port 3000')
