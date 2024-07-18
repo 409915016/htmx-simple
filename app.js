@@ -2,6 +2,7 @@ import express from "express"
 import createHomePageTemplate from "./views/index.js"
 import createListTemplate from "./views/list.js"
 import createBookTemplate from "./views/book.js"
+import createEditFormTemplate from "./views/edit.js"
 import BOOKS_DATA from "./data/data.js"
 
 const getRandomInt = (min, max) => {
@@ -46,6 +47,13 @@ app.delete('/books/:id', (req, res) =>{
     BOOKS_DATA.splice(ids, 1)
 
     res.send()
+})
+
+app.get('/books/edit/:id', (req, res) => {
+    const {id} = req.params
+    const book = BOOKS_DATA.find((i) =>{return i.id === id}) 
+
+    res.send(createEditFormTemplate(book))
 })
 
 // listen to port
