@@ -37,13 +37,13 @@ app.post('/books', (req, res) =>{
 
 app.get('/books/:id', (req, res) => {
     const {id} = req.params
-    const book = BOOKS_DATA.find((i) => i.id === id)
+    const book = BOOKS_DATA.find((i) => {return i.id === id })
     res.send(createBookTemplate(book))
 })
 
 app.delete('/books/:id', (req, res) =>{
     const {id} = req.params
-    const ids = BOOKS_DATA.findIndex(i =>{ i.id === id }) 
+    const ids = BOOKS_DATA.findIndex((i) =>{ return i.id === id }) 
     BOOKS_DATA.splice(ids, 1)
 
     res.send()
@@ -51,9 +51,20 @@ app.delete('/books/:id', (req, res) =>{
 
 app.get('/books/edit/:id', (req, res) => {
     const {id} = req.params
-    const book = BOOKS_DATA.find((i) =>{return i.id === id}) 
+    const book = BOOKS_DATA.find((i) =>{ return i.id === id }) 
 
     res.send(createEditFormTemplate(book))
+})
+
+app.put('/books/:id', (req, res) =>{
+    const {id} = req.params
+    const {title, author} = req.body
+
+    const newBook = { id, title, author}
+    const ids = BOOKS_DATA.findIndex((i) =>{ return i.id === id }) 
+    BOOKS_DATA[ids] = newBook
+
+    res.send(createBookTemplate(newBook))
 })
 
 // listen to port
